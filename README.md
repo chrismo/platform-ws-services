@@ -56,9 +56,9 @@ which should return:
       "capsule_id": "111111",
       "capsule_name": "redis0",
       "deployment_id": "987654321",
-      "name":"redis_role",
-      "output": "",
-      "status":0
+      "name": "redis0-redis_role",
+      "output": "expected role master, found role slave",
+      "status": 0
     }
   ]
 }

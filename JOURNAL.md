@@ -35,3 +35,19 @@ with the stated goal first and see how long it takes me tackle just that.
 I'm not seeing tests, I don't think? I see some things with Test in the name of
 the constants, but these don't seem like unit tests? I should read up on TDD
 stuff in Go.
+
+---
+
+Being a go n00b, trying to get the older versions of RethinkDB and (especially)
+gorethink installed is leaving a little hair on my desk.
+
+`go get` apparently has no version support for either pre-built pkg or
+tag/branch from github?
+
+Settled on `go get -u github.com/dancannon/gorethink` then cd to the $GOPATH src
+and `git co v1.0.0` and `go install` from there. We'll see.
+
+---
+
+Got through README with a success seed, run and curl. The output is slightly
+different than the README had, so I've updated that.
