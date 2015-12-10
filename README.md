@@ -70,10 +70,10 @@ which should return:
 The `Group` model has a 1-to-many association with a `Deployment`. It requires that an `Id` be provided during creation and by default, no `Settings` are configured. When a `Check` comes in that requires a notification, the system will first look at the `Settings` on the `Deployment` model and then fall back to the `Group` model `Settings`. If neither contains the specific integration, no notification is sent.
 
 ###Settings
-The `Settings` model is part of a `Group` and `Deployment` model. It contains all the necessary information to send a notfication for a particular service (i.e. Slack, Pagerduty, HipChat, Email, etc.).
+The `Settings` model is part of a `Group` and `Deployment` model. It contains all the necessary information to send a notification for a particular service (i.e. Slack, PagerDuty, HipChat, Email, etc.).
 
 ###Deployment
-The `Deployment` model belongs to a `Group` and contains basic information about the customer deployment (i.e. name, account slug, etc.) and also contains `Settings` and an `[]Check`. In order for the system to send a notification for a deployment, two criteria must be met: 1. the check must be registerd with the deployment via the `[]Check` 2. `Settings` must exist for either the `Deployment` or associated `Group`.
+The `Deployment` model belongs to a `Group` and contains basic information about the customer deployment (i.e. name, account slug, etc.) and also contains `Settings` and an `[]Check`. In order for the system to send a notification for a deployment, two criteria must be met: 1. the check must be registered with the deployment via the `[]Check` 2. `Settings` must exist for either the `Deployment` or associated `Group`.
 
 ###Check
 The `Check` model is a "dictionary" of all the checks returned by each deployment type that we wish to act on.
@@ -132,12 +132,9 @@ const (
 ##Work Sample
 
 - Add the necessary functionality in `listener.go` and `notififer.go` to be able to send notifications based on whether a new or resolved incident has been received (*note*: this should be determinable with the calls to Alerter)
-- Implement the Pagerduty (`model_pagerduty.go`) and Slack (`model_slack.go`) notifications by making calls in `notififer.go`, a function `getInfo` has already been provided that extracts the necessary model data from a check
+- Implement the PagerDuty (`model_pagerduty.go`) and Slack (`model_slack.go`) notifications by making calls in `notififer.go`, a function `getInfo` has already been provided that extracts the necessary model data from a check
 
 ***HINTS:***
 
 - Currently there's no communication channel created between listener and notifier, that's a good place to start
-- The models returned in `getInfo` provides all the information meeded to determine whether a specific deployment or group should receive a notification for a particular service
-
-
-
+- The models returned in `getInfo` provides all the information needed to determine whether a specific deployment or group should receive a notification for a particular service
