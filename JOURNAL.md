@@ -93,3 +93,31 @@ store these at all in Redis, esp. with 5 min expiry?)
 
 Also I suspect I jumped the gun on presuming deployments were instances instead
 of types as the README said before.
+
+### Dec 11 2015
+
+Fresh start. Read over a bit of Go docs and went through the Tour examples to
+help me understand some more basics, cuz reading is much easier than writing.
+And I need to understand interfaces better.
+
+So what to code next. ...
+
+This design is bothering me. Listener, as just an interface should exist, but I
+should be able to have the alerter and the notifier both implement that ...
+right now it seems like passing both an alerter and a notifier into the listener
+is ... no bueno. If I alter the alert handler to receive a slice of listeners,
+it could loop over them all and say 'go for it' whatever you need to do. I'm
+thinking this might also setup having specific notifier types for each
+notification service (PagerDuty, Slack, etc.) which can then be wired up once in
+main, and a generic notifier class that then is also conceptually coupled to
+every notification service won't have to exist.
+
+In real life, if there's no time for this refactoring, then we probably do the
+faster thing of making Listener accept both an Alerter and a Notifier and work
+to circle back on the refactoring.
+
+I prefer the refactoring first, then the addition should just slide right into
+place.
+
+Trick now is, how do I test this to ensure refactoring don't break stuff, and
+I'm still a n00b.

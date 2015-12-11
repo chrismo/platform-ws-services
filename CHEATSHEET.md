@@ -12,4 +12,6 @@
 - list of all commands: View | Developer | Toggle Developer Tools, console
   type atom.commands.registeredCommands (useful to bind a shortcut to something
   not currently bound).
-- can tab switching go on last used order vs. tab order?
+- can tab switching go on last used order vs. tab order? there's a package to do
+  this but it looks sketchy. the last-cursor-position package is good-ish
+  enough.
