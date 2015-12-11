@@ -84,17 +84,17 @@ You can send an "alert" to the system with the following command:
 
 ```shell
 curl -u x:$COMPOSE_SERVICE_PASSWORD -XPOST http://localhost:8000/margo/alerts -d \
-'{ \
-  "client": "localhost", \
-  "check": { \
-    "name": "redis0-redis_role", \
-    "capsule_name": "redis0", \
-    "output": "no master found", \
-    "status": 1, \
-    "capsule_id": "1324354657687980", \
-    "deployment_id": "987654321", \
-    "account": "compose" \
-  } \
+'{
+  "client": "localhost",
+  "check": {
+    "name": "redis0-redis_role",
+    "capsule_name": "redis0",
+    "output": "no master found",
+    "status": 1,
+    "capsule_id": "1324354657687980",
+    "deployment_id": "987654321",
+    "account": "compose"
+  } 
 }'
 ```
 

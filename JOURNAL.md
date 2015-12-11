@@ -69,3 +69,27 @@ deployment type says to me that we record different categories of deployments,
 but I see nothing other than instances of deployments so far.
 
 If those three terms are synonymous, that could use some unification.
+
+---
+
+Line continuation chars inside json for alert in README need to go, at least
+on bash/OS X. In for realz, I'd ask around, PR that, but...
+
+Ah, alerts and checks have different routes.
+
+Alerter wraps Redis. Passed into deployment handler and listener, listener
+passed into alert handler. GetDeployment retrieves all active alerts from redis,
+namespaced to the deployment. Listener will set or resolve alerts. Ok - that
+makes sense.
+
+---
+
+Ok, been digging around the code flow from alert handler through alerter and
+listener into Redis, including a crash course in channels. Seems
+straightforward. I suppose now from the hint to have a "channel created between
+listener and notifier" means polling Redis or pub/sub is uncouth -- which makes
+sense as well. Why go through Redis if we can communicate directly? Dunno. (Why
+store these at all in Redis, esp. with 5 min expiry?)
+
+Also I suspect I jumped the gun on presuming deployments were instances instead
+of types as the README said before.
