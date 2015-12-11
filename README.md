@@ -76,14 +76,14 @@ The `Settings` model is part of a `Group` and `Deployment` model. It contains al
 The `Deployment` model belongs to a `Group` and contains basic information about the customer deployment (i.e. name, account slug, etc.) and also contains `Settings` and an `[]Check`. In order for the system to send a notification for a deployment, two criteria must be met: 1. the check must be registered with the deployment via the `[]Check` 2. `Settings` must exist for either the `Deployment` or associated `Group`.
 
 ###Check
-The `Check` model is a "dictionary" of all the checks returned by each deployment type that we wish to act on.
+The `Check` model is a "dictionary" of all the checks returned by each deployment that we wish to act on.
 
 ##Sending Test Alerts
 
 You can send an "alert" to the system with the following command:
 
 ```shell
-curl -u x:jprules -XPOST http://localhost:8000/margo/alerts -d \
+curl -u x:$COMPOSE_SERVICE_PASSWORD -XPOST http://localhost:8000/margo/alerts -d \
 '{ \
   "client": "localhost", \
   "check": { \
@@ -102,7 +102,7 @@ Breakdown of each attribute:
 - `client`: where the alert came from
 - `check`: object
 - `check.name`: this is a combination of the alert name and the capsule name; in order for the system to process the alert properly, the first part of the name (i.e. everything before the first `-`) should match the `capsule_name` attribute
-- `check.capsule_name`: name of the capsule, typically in the form of redisX, elasticsearchX, mongodbX, etc. where 'X' is a number, 0 is always fine for testing of course
+- `check.capsule_name`: name of the capsule, typically in the form of `redisX`, `elasticsearchX`, `mongodbX`, etc. where 'X' is a number, 0 is always fine for testing of course
 - `check.output`: human readable text regarding the alert
 - `check.status`: one of 0/1/2/3 and match with the below constants, if you want to test a notification, set the value to 1, 2, or 3; if you want to resolve a notification, set the value to 0
 ```Go
@@ -115,8 +115,8 @@ const (
 ```
 
 - `check.capsule_id`: this is somewhat of a random value for testing purposes but you'll want to make the unique across deployments
-- `check.deployment_id`: this needs to match up with whatever deployment(s) you have regiesterd with the system; based on the seed data, "987654321" or "13243647586970" are valid values
-- `check.account`: whatever your heart desires it's just an identifer for an account in the system
+- `check.deployment_id`: this needs to match up with whatever deployment(s) you have registered with the system; based on the seed data, "987654321" or "13243647586970" are valid values
+- `check.account`: whatever your heart desires it's just an identifier for an account in the system
 
 ##HTTP Routes
 
@@ -131,8 +131,8 @@ const (
 
 ##Work Sample
 
-- Add the necessary functionality in `listener.go` and `notififer.go` to be able to send notifications based on whether a new or resolved incident has been received (*note*: this should be determinable with the calls to Alerter)
-- Implement the PagerDuty (`model_pagerduty.go`) and Slack (`model_slack.go`) notifications by making calls in `notififer.go`, a function `getInfo` has already been provided that extracts the necessary model data from a check
+- Add the necessary functionality in `listener.go` and `notifier.go` to be able to send notifications based on whether a new or resolved incident has been received (*note*: this should be determinable with the calls to Alerter)
+- Implement the PagerDuty (`model_pagerduty.go`) and Slack (`model_slack.go`) notifications by making calls in `notifier.go`, a function `getInfo` has already been provided that extracts the necessary model data from a check
 
 ***HINTS:***
 

@@ -51,3 +51,21 @@ and `git co v1.0.0` and `go install` from there. We'll see.
 
 Got through README with a success seed, run and curl. The output is slightly
 different than the README had, so I've updated that.
+
+---
+
+Digging into testing more, seems using build tags to create seed data is a bit
+wonky to me. Maybe it's a community/golang thing. "wonky" => not a clear
+declaration of intent. Seeding a dev database isn't a test.
+
+And, confirmed `go test` says no tests found. Awesome! :|
+
+---
+
+In the README, I changed "deployment type" to "deployment" in the sentence
+describing what a Check is because as I understand it so far, each deployment
+may have many alerts/checks/incidents (presuming these are synonymous so far)? A
+deployment type says to me that we record different categories of deployments,
+but I see nothing other than instances of deployments so far.
+
+If those three terms are synonymous, that could use some unification.
