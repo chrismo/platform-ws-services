@@ -3,6 +3,8 @@
 - upper => Public / lower => Private
 - all files named `*_test.go` are ignored by go build, and will only run by go test.
 - [build tags](https://golang.org/pkg/go/build/): `// +build foo` =>
+- https://github.com/a8m/go-lang-cheat-sheet
+- https://golang.org/doc/code.html#Testing
 
 
 ### Atom

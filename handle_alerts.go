@@ -6,7 +6,7 @@ import (
 	"strings"
 )
 
-func AlertsHandlerFunc(listener *Listener) HandlerFunc {
+func AlertsHandlerFunc(listener IListener) HandlerFunc {
 	return func(w *JsonResponseWriter, r *http.Request) {
 		if strings.ToUpper(r.Method) == "POST" {
 			TestAlert(w, r, listener)
@@ -16,7 +16,7 @@ func AlertsHandlerFunc(listener *Listener) HandlerFunc {
 	}
 }
 
-func TestAlert(w *JsonResponseWriter, r *http.Request, listener *Listener) {
+func TestAlert(w *JsonResponseWriter, r *http.Request, listener IListener) {
 	decoder := json.NewDecoder(r.Body)
 	var sensuResult SensuResult
 	err := decoder.Decode(&sensuResult)
@@ -24,6 +24,6 @@ func TestAlert(w *JsonResponseWriter, r *http.Request, listener *Listener) {
 		w.WriteError(err)
 		return
 	}
-	listener.SensuChan <- &sensuResult
+	listener.GetSensuChan() <- &sensuResult
 	w.WriteOk(201)
 }

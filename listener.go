@@ -16,6 +16,12 @@ const (
 	Unknown         // 3
 )
 
+// ha!
+type IListener interface {
+	GetSensuChan() chan *SensuResult
+	Start()
+}
+
 type Listener struct {
 	SensuChan chan *SensuResult
 	alerter   *Alerter
@@ -49,6 +55,10 @@ func NewListener(alerter *Alerter) (*Listener, error) {
 
 func (l *Listener) Start() {
 	go l.listenForChecks()
+}
+
+func (l *Listener) GetSensuChan() chan *SensuResult {
+	return l.SensuChan
 }
 
 func (l *Listener) listenForChecks() {

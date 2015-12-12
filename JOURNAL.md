@@ -121,3 +121,10 @@ place.
 
 Trick now is, how do I test this to ensure refactoring don't break stuff, and
 I'm still a n00b.
+
+---
+
+Woo! Following the time honored hack/read/run/compile/fix/read/guess cycle I
+eventually moved the current Listener behind an IListener interface (nod to
+Delphi) and created a passing unit test for handle_alerts.go. Whew. Such curve.
+So learning.
