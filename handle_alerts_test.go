@@ -20,6 +20,7 @@ func (sl *StuntListener) GetSensuChan() chan *SensuResult {
 }
 
 func TestAlertsHandler(t *testing.T) {
+	// TODO: this is only testing an empty body. Other tests needed.
 	recorder := httptest.NewRecorder()
 	jw := &JsonResponseWriter{w: recorder}
 	r, err := http.NewRequest("GET", "url", strings.NewReader("{}"))

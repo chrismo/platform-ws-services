@@ -24,6 +24,7 @@ func getInfo(sensuCheck *SensuCheck) (Deployment, Check, Settings, error) {
 	var settings Settings
 	deployment, err := LookupDeploymentById(sensuCheck.DeploymentId)
 	if err != nil {
+		// exceptions, shmexceptions
 		return deployment, check, settings, err
 	} else if check, err := deployment.CheckByName(checkName); err == nil {
 		settings, err := deployment.MergedAlertSettings()

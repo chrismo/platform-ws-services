@@ -142,3 +142,20 @@ APIs I like to include an exploratory CLI for clients that dump actual curl
 commands to the console to more generically demonstrate how to use the API. The
 script in its current form isn't fully exploratory, but covers some integration
 basics while doing some refactoring.
+
+### Dec 13 2015
+
+The current Listener is mostly code around the SensuCheck, and should probably
+become a model. The alerts handler should be able to get a SensuCheck instance
+go from the JSON, then just pass it to all listeners. Listener shouldn't be
+parsing from JSON. Not sure why that's call a check at all, since it's really an
+alert.
+
+---
+
+(Sheesh go can be bossy ... "Hey, comment this exported thing." "Ok, now do it
+right, moron").
+
+---
+
+Starter Alert model going. Time to commit.

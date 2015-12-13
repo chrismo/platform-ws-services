@@ -16,7 +16,6 @@ const (
 	Unknown         // 3
 )
 
-// ha!
 type IListener interface {
 	GetSensuChan() chan *SensuResult
 	Start()
@@ -37,7 +36,7 @@ type SensuCheck struct {
 	CapsuleName  string  `json:"capsule_name"`
 	Output       string  `json:"output"`
 	Status       float64 `json:"status"`
-	CapsuleId    string  `json:"capsule_id",omitempty"`
+	CapsuleId    string  `json:"capsule_id,omitempty"`
 	DeploymentId string  `json:"deployment_id,omitempty"`
 	AccountSlug  string  `json:"account,omitempty"`
 }
