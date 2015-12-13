@@ -128,3 +128,17 @@ Woo! Following the time honored hack/read/run/compile/fix/read/guess cycle I
 eventually moved the current Listener behind an IListener interface (nod to
 Delphi) and created a passing unit test for handle_alerts.go. Whew. Such curve.
 So learning.
+
+### Dec 12 2015
+
+Little bit yesterday and today picked away at times on some integration tests
+with Ruby. I need/want some backup on further refactoring work from the outside,
+to help ensure I'm not breaking existing functionality.
+
+I wrote it in Ruby since I'm familiar with it and seems a good job for a
+scripting language to do. Also, as commented in the script, I decided to shell
+out to curl instead of other native Ruby options because when I'm building out
+APIs I like to include an exploratory CLI for clients that dump actual curl
+commands to the console to more generically demonstrate how to use the API. The
+script in its current form isn't fully exploratory, but covers some integration
+basics while doing some refactoring.

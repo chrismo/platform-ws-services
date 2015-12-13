@@ -58,7 +58,7 @@ func (a *Alerter) SetWithExpires(key string, value []byte, expire int) {
 func (a *Alerter) SetHash(key, field string, value []byte) {
 	conn := a.pool.Get()
 	defer conn.Close()
-	// expire the key after 5 minutes
+	// expire the key after 30 minutes
 	conn.Send("MULTI")
 	conn.Send("HSET", key, field, value)
 	conn.Send("EXPIRE", key, 60*30)
