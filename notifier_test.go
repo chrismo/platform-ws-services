@@ -1,10 +1,6 @@
 package main
 
-import (
-	"testing"
-
-	r "github.com/dancannon/gorethink"
-)
+import "testing"
 
 type StuntTransmitter struct {
 	TransmitCalled bool
@@ -14,28 +10,6 @@ type StuntTransmitter struct {
 func (st *StuntTransmitter) Transmit(p AlertPackage) {
 	st.TransmitCalled = true
 	st.AlertPackage = p
-}
-
-/*func TestMain(m *testing.M) {
-	flag.Parse()
-	setupTestDB()
-	os.Exit(m.Run())
-	tearDownTestDB()
-}*/
-
-func setupTestDB() {
-	session, _ = initRethinkConn()
-	tearDownTestDB()
-	r.DBCreate("alerts_test").RunWrite(session)
-	// TODO: extract to reuse for seeding script
-	r.DB("alerts_test").TableCreate("deployments").RunWrite(session)
-	r.DB("alerts_test").TableCreate("checks").RunWrite(session)
-	r.DB("alerts_test").TableCreate("groups").RunWrite(session)
-	session.Use("alerts_test")
-}
-
-func tearDownTestDB() {
-	r.DBDrop("alerts_test").RunWrite(session)
 }
 
 func TestNotifier(t *testing.T) {

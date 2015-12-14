@@ -21,15 +21,12 @@ func TestSetup(t *testing.T) {
 	seedRethinkdbDeployments(session)
 }
 
-func setupRethinkdb(s *r.Session) error {
-	_, err := r.DBDrop("alerts").RunWrite(s)
-	r.DBCreate("alerts").RunWrite(s)
-	return err
+func setupRethinkdb(s *r.Session) {
+	tearDownDB("alerts", s)
+	setupDB("alerts", s)
 }
 
 func seedRethinkdbChecks(s *r.Session) error {
-	r.DB("alerts").TableCreate("checks").RunWrite(s)
-
 	data := []*Check{
 		&Check{
 			Id:          "elasticsearch-es_heap",
@@ -68,8 +65,6 @@ func seedRethinkdbChecks(s *r.Session) error {
 }
 
 func seedRethinkdbGroups(s *r.Session) error {
-	r.DB("alerts").TableCreate("groups").RunWrite(s)
-
 	r.DB("alerts").Table("groups").Insert(
 		&Group{
 			Id: "123456789",
@@ -86,8 +81,6 @@ func seedRethinkdbGroups(s *r.Session) error {
 }
 
 func seedRethinkdbDeployments(s *r.Session) error {
-	r.DB("alerts").TableCreate("deployments").RunWrite(s)
-
 	data := []*Deployment{
 		&Deployment{
 			Id:      "987654321",
