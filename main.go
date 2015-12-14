@@ -21,6 +21,11 @@ var (
 	session         *r.Session
 )
 
+type Listener interface {
+	GetChan() chan *Alert
+	Start()
+}
+
 func main() {
 	flag.Parse()
 
