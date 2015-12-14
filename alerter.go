@@ -44,14 +44,14 @@ func NewAlerter(server, password string) (*Alerter, error) {
 }
 
 func (a *Alerter) Start() {
-	go a.listenForChecks()
+	go a.listenForAlerts()
 }
 
 func (a *Alerter) GetChan() chan *Alert {
 	return a.AlertChan
 }
 
-func (a *Alerter) listenForChecks() {
+func (a *Alerter) listenForAlerts() {
 	for {
 		select {
 		case result := <-a.AlertChan:

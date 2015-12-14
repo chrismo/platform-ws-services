@@ -165,3 +165,35 @@ Starter Alert model going. Time to commit.
 Listener is gutted and all but gone. SensuCheck still hanging around in
 notifier. I probably broke the seeding with this next commit I'm about to do,
 but the few unit tests and the integration test are passing.
+
+---
+
+Cool. Listener refactoring is done. Next step, "move existing notifier.getInfo
+into Deployment"
+
+---
+
+Hmmm, tried that, but it doesn't make as much sense now digging in.
+
+---
+
+Got notifier as a Listener and trying to get it to hand off to transmitters
+(PagerDuty, Slack). Ways to go, but it's late and eyeballs turning off.
+
+### 2015 Dec 14
+
+So, actually got it working before sleep last night. And a couple of more
+touches before committing. Here's the bulk of the commit message:
+
+First, the alert handler now takes an array of Listener interfaces and a
+notifier instance is now passed to it in addition to the alerter.
+
+I'd considered making model_pagerduty and model_slack simply implement the
+listener interface, too, but then couldn't find a decent place for the given
+`getInfo` method ... plus deciding to not use goroutines as a first shot ...
+even as I type this I realize these are all very negotiable things, so I'll just
+run in a direction until it seems suboptimal.
+
+So with the notifier staying around, I added a Transmitter interface that the
+specific models can implement and I have that basic functionality working in
+notifier, plus a test. 

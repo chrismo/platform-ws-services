@@ -28,7 +28,7 @@ func TestAlertsHandler(t *testing.T) {
 		t.Error("error creating http.Request")
 	}
 	sl := StuntListener{AlertChan: make(chan *Alert, 10)}
-	TestAlert(jw, r, &sl)
+	TestAlert(jw, r, []Listener{&sl})
 
 	if recorder.Code != 201 || recorder.Body.String() != "{\"ok\":1}" {
 		t.Errorf("Expected %s, was %s", "201 - {\"ok\":1}", fmt.Sprintf("%d - %s", recorder.Code, recorder.Body.String()))

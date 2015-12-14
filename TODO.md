@@ -1,6 +1,6 @@
 - [x] Refactor Listener behind interface
-- [ ] Refactor Alerter to simply implement IListener interface
-- [ ] move existing notifier.getInfo into Deployment, it's feature envy
+- [x] Refactor Alerter to simply implement IListener interface
+- [x] (nah) - move existing notifier.getInfo into Deployment, it's feature envy
 - [ ] Add specific PagerDuty notifier.
 - [ ] Add specific Slack notifier.
 - [ ] Existing TODOs in code

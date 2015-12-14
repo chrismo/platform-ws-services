@@ -1,7 +1,5 @@
 package main
 
-import ()
-
 const (
 	SlackApiUrl = "https://slack.com/api/chat.postMessage"
 )
@@ -9,6 +7,10 @@ const (
 type Slack struct {
 	ApiKey  string `gorethink:"api_key" json:"api_key"`
 	Channel string `gorethink:"channel" json:"channel"`
+}
+
+func (s *Slack) Transmit() {
+
 }
 
 // TODO: take the alert and make a nice Slack notification with some sort of

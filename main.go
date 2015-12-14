@@ -33,16 +33,15 @@ func main() {
 
 	alerter, err := NewAlerter(*redisUrl, *redisPassword)
 	failOnError(err, fmt.Sprintf("Failed to connect to Redis (%s)", *redisUrl))
+	alerter.Start()
 
 	session, err = initRethinkConn()
 	failOnError(err, fmt.Sprintf("Failed to connect to RethinkdB (%s)", *rethinkUrl))
 	defer session.Close()
 	session.Use("alerts")
 
-	notifier := NewNotifier()
+	notifier := NewNotifier([]Transmitter{&Slack{}})
 	notifier.Start()
-
-	alerter.Start()
 
 	mux := http.NewServeMux()
 	mux.HandleFunc("/status", ApiStatusHandler)
@@ -51,7 +50,7 @@ func main() {
 	mux.Handle("/margo/groups", http.StripPrefix("/margo/groups", GroupsHandlerFunc()))
 	mux.Handle("/margo/checks", http.StripPrefix("/margo/checks", ChecksHandlerFunc()))
 	mux.Handle("/margo/checks/", http.StripPrefix("/margo/checks/", ChecksHandlerFunc()))
-	mux.Handle("/margo/alerts", http.StripPrefix("/margo/alerts", AlertsHandlerFunc(alerter)))
+	mux.Handle("/margo/alerts", http.StripPrefix("/margo/alerts", AlertsHandlerFunc([]Listener{alerter, notifier})))
 
 	log.Printf("listening on %s\n", *listenPort)
 	log.Fatal(http.ListenAndServe(fmt.Sprintf(":%s", *listenPort), mux))

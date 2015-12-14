@@ -6,10 +6,10 @@ import (
 )
 
 // AlertsHandlerFunc creates an anonymous function to handle alert POSTs
-func AlertsHandlerFunc(listener Listener) HandlerFunc {
+func AlertsHandlerFunc(listeners []Listener) HandlerFunc {
 	return func(w *JsonResponseWriter, r *http.Request) {
 		if strings.ToUpper(r.Method) == "POST" {
-			TestAlert(w, r, listener)
+			TestAlert(w, r, listeners)
 		} else {
 			UnknownEndpoint(w, r)
 		}
@@ -17,12 +17,15 @@ func AlertsHandlerFunc(listener Listener) HandlerFunc {
 }
 
 // TestAlert processes a POSTed alert
-func TestAlert(w *JsonResponseWriter, r *http.Request, listener Listener) {
+func TestAlert(w *JsonResponseWriter, r *http.Request, listeners []Listener) {
 	alert, err := NewAlertFromJSON(r.Body)
 	if err != nil {
 		w.WriteError(err)
 		return
 	}
-	listener.GetChan() <- alert
+	for _, l := range listeners {
+		l.GetChan() <- alert
+	}
+
 	w.WriteOk(201)
 }
