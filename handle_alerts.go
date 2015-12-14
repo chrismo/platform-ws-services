@@ -1,7 +1,6 @@
 package main
 
 import (
-	"encoding/json"
 	"net/http"
 	"strings"
 )
@@ -17,13 +16,11 @@ func AlertsHandlerFunc(listener IListener) HandlerFunc {
 }
 
 func TestAlert(w *JsonResponseWriter, r *http.Request, listener IListener) {
-	decoder := json.NewDecoder(r.Body)
-	var sensuResult SensuResult
-	err := decoder.Decode(&sensuResult)
+	alert, err := NewAlertFromJSON(r.Body)
 	if err != nil {
 		w.WriteError(err)
 		return
 	}
-	listener.GetSensuChan() <- &sensuResult
+	listener.GetSensuChan() <- alert
 	w.WriteOk(201)
 }

@@ -2,21 +2,25 @@ package main
 
 import (
 	"bytes"
+	"encoding/json"
 	"strings"
 	"testing"
 )
 
 func TestAlertModelJsonRoundtrip(t *testing.T) {
-	input := Alert{
-		Name:         "name",
-		CapsuleName:  "capsuleName",
-		Output:       "output",
-		Status:       0.33333333333333, // float64?
-		CapsuleID:    "capID",
-		DeploymentID: "depID",
-		AccountSlug:  "acc",
-	}
-	jsonString, _ := input.serialize()
+	input :=
+		ClientAlert{Client: "foobar",
+			Alert: Alert{
+				Name:         "name",
+				CapsuleName:  "capsuleName",
+				Output:       "output",
+				Status:       0.33333333333333, // float64?
+				CapsuleID:    "capID",
+				DeploymentID: "depID",
+				AccountSlug:  "acc",
+			},
+		}
+	jsonString, _ := json.Marshal(input)
 	alert, _ := NewAlertFromJSON(bytes.NewReader(jsonString))
 	if alert.Name != "name" {
 		t.Error("name did not roundtrip")

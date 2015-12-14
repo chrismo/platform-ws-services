@@ -37,9 +37,7 @@ func main() {
 	notifier := NewNotifier()
 	notifier.Start()
 
-	listener, err := NewListener(alerter)
-	failOnError(err, "Failed to create a listener")
-	listener.Start()
+	alerter.Start()
 
 	mux := http.NewServeMux()
 	mux.HandleFunc("/status", ApiStatusHandler)
@@ -48,7 +46,7 @@ func main() {
 	mux.Handle("/margo/groups", http.StripPrefix("/margo/groups", GroupsHandlerFunc()))
 	mux.Handle("/margo/checks", http.StripPrefix("/margo/checks", ChecksHandlerFunc()))
 	mux.Handle("/margo/checks/", http.StripPrefix("/margo/checks/", ChecksHandlerFunc()))
-	mux.Handle("/margo/alerts", http.StripPrefix("/margo/alerts", AlertsHandlerFunc(listener)))
+	mux.Handle("/margo/alerts", http.StripPrefix("/margo/alerts", AlertsHandlerFunc(alerter)))
 
 	log.Printf("listening on %s\n", *listenPort)
 	log.Fatal(http.ListenAndServe(fmt.Sprintf(":%s", *listenPort), mux))

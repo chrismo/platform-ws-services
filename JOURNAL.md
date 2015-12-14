@@ -159,3 +159,9 @@ right, moron").
 ---
 
 Starter Alert model going. Time to commit.
+
+---
+
+Listener is gutted and all but gone. SensuCheck still hanging around in
+notifier. I probably broke the seeding with this next commit I'm about to do,
+but the few unit tests and the integration test are passing.
