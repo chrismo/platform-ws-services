@@ -1,10 +1,6 @@
 package main
 
-import (
-	"log"
-
-	r "github.com/dancannon/gorethink"
-)
+import r "github.com/dancannon/gorethink"
 
 func setupTestDB() {
 	session, _ = initRethinkConn()
@@ -24,6 +20,5 @@ func setupDB(name string, session *r.Session) {
 }
 
 func tearDownDB(name string, session *r.Session) {
-	log.Print(session)
 	r.DBDrop(name).RunWrite(session)
 }
