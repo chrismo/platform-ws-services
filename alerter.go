@@ -47,7 +47,7 @@ func (a *Alerter) Start() {
 	go a.listenForChecks()
 }
 
-func (a *Alerter) GetSensuChan() chan *Alert {
+func (a *Alerter) GetChan() chan *Alert {
 	return a.AlertChan
 }
 
@@ -56,7 +56,7 @@ func (a *Alerter) listenForChecks() {
 		select {
 		case result := <-a.AlertChan:
 			if err := a.processAlert(result); err != nil {
-				log.Printf("ERROR: Unable to process sensu result, %s", err.Error())
+				log.Printf("ERROR: Unable to process alert, %s", err.Error())
 			}
 		case <-time.After(100 * time.Millisecond):
 			// NOP, just breath

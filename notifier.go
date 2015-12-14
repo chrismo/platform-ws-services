@@ -16,13 +16,13 @@ func (n *Notifier) Start() {
 
 }
 
-func getInfo(sensuCheck *SensuCheck) (Deployment, Check, Settings, error) {
-	latterPart := strings.TrimPrefix(sensuCheck.Name, sensuCheck.CapsuleName)
+func getInfo(alert *Alert) (Deployment, Check, Settings, error) {
+	latterPart := strings.TrimPrefix(alert.Name, alert.CapsuleName)
 	checkName := strings.Replace(latterPart, "-", "", 1)
 	var deployment Deployment
 	var check Check
 	var settings Settings
-	deployment, err := LookupDeploymentById(sensuCheck.DeploymentId)
+	deployment, err := LookupDeploymentById(alert.DeploymentID)
 	if err != nil {
 		// exceptions, shmexceptions
 		return deployment, check, settings, err

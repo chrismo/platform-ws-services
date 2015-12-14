@@ -21,6 +21,6 @@ func TestAlert(w *JsonResponseWriter, r *http.Request, listener IListener) {
 		w.WriteError(err)
 		return
 	}
-	listener.GetSensuChan() <- alert
+	listener.GetChan() <- alert
 	w.WriteOk(201)
 }

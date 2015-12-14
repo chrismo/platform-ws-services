@@ -9,14 +9,14 @@ import (
 )
 
 type StuntListener struct {
-	SensuChan chan *Alert
+	AlertChan chan *Alert
 }
 
 func (sl *StuntListener) Start() {
 }
 
-func (sl *StuntListener) GetSensuChan() chan *Alert {
-	return sl.SensuChan
+func (sl *StuntListener) GetChan() chan *Alert {
+	return sl.AlertChan
 }
 
 func TestAlertsHandler(t *testing.T) {
@@ -27,7 +27,7 @@ func TestAlertsHandler(t *testing.T) {
 	if err != nil {
 		t.Error("error creating http.Request")
 	}
-	sl := StuntListener{SensuChan: make(chan *Alert, 10)}
+	sl := StuntListener{AlertChan: make(chan *Alert, 10)}
 	TestAlert(jw, r, &sl)
 
 	if recorder.Code != 201 || recorder.Body.String() != "{\"ok\":1}" {
