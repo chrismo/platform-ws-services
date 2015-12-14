@@ -1,24 +1,76 @@
 package main
 
-import "testing"
+import (
+	"testing"
+
+	r "github.com/dancannon/gorethink"
+)
 
 type StuntTransmitter struct {
 	TransmitCalled bool
+	AlertPackage   AlertPackage
 }
 
-func (st *StuntTransmitter) Transmit() {
+func (st *StuntTransmitter) Transmit(p AlertPackage) {
 	st.TransmitCalled = true
+	st.AlertPackage = p
+}
+
+/*func TestMain(m *testing.M) {
+	flag.Parse()
+	setupTestDB()
+	os.Exit(m.Run())
+	tearDownTestDB()
+}*/
+
+func setupTestDB() {
+	session, _ = initRethinkConn()
+	tearDownTestDB()
+	r.DBCreate("alerts_test").RunWrite(session)
+	// TODO: extract to reuse for seeding script
+	r.DB("alerts_test").TableCreate("deployments").RunWrite(session)
+	r.DB("alerts_test").TableCreate("checks").RunWrite(session)
+	r.DB("alerts_test").TableCreate("groups").RunWrite(session)
+	session.Use("alerts_test")
+}
+
+func tearDownTestDB() {
+	r.DBDrop("alerts_test").RunWrite(session)
 }
 
 func TestNotifier(t *testing.T) {
+	setupTestDB()
+	defer tearDownTestDB()
+
+	d := Deployment{
+		Id:      "1",
+		GroupId: "1",
+		Type:    "foobox",
+		Name:    "deployment-foobox",
+		Checks: []Check{Check{
+			Id:          "1",
+			Type:        "check-type",
+			Name:        "check-name",
+			Level:       2,
+			Title:       "Generic Check Title",
+			Description: "Generic Check Description",
+		}},
+	}
+	d.Save()
+
 	st := StuntTransmitter{}
 	n := NewNotifier([]Transmitter{&st})
-	n.Start()
 	alert := Alert{
-		Name: "foo",
+		Name:         "foobox0-check-name",
+		DeploymentID: "1",
+		CapsuleName:  "foobox0",
 	}
 	n.GetChan() <- &alert
-	if !st.TransmitCalled {
-		t.Error("transmit not called")
-	}
+	n.listenForAlert()
+
+	assert(t, st.TransmitCalled, "Transmit in mock not called")
+	equals(t, "foobox0-check-name", st.AlertPackage.Alert.Name)
+	equals(t, "1", st.AlertPackage.Deployment.Id)
+	equals(t, "check-name", st.AlertPackage.Check.Name)
+	equals(t, *new(Settings), st.AlertPackage.Settings)
 }

@@ -1,11 +1,12 @@
 - [x] Refactor Listener behind interface
 - [x] Refactor Alerter to simply implement IListener interface
+- [x] Listener is too generic a name. It isn't just passing events to another
+      thing about alerts, it's acting on them directly.
 - [x] (nah) - move existing notifier.getInfo into Deployment, it's feature envy
 - [ ] Add specific PagerDuty notifier.
 - [ ] Add specific Slack notifier.
 - [ ] Existing TODOs in code
-- [ ] Listener is too generic a name. It isn't just passing events to another
-      thing about alerts, it's acting on them directly.
+- [ ] Why is status a float64?
 - [ ] Why are alerts set to expire in 30 minutes?
 - [ ] Why are some routes declared twice (with/without ending slash)?
       except on alerts and groups? Convenience presumably? (main.go)

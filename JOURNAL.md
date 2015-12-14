@@ -196,4 +196,27 @@ run in a direction until it seems suboptimal.
 
 So with the notifier staying around, I added a Transmitter interface that the
 specific models can implement and I have that basic functionality working in
-notifier, plus a test. 
+notifier, plus a test.
+
+---
+
+TIL: `golint` is the bossy one. Atom's Go integration by default runs the
+linter. The existing code here raises lots of complaints, but as it's a separate
+tool, presumably its use is a team-by-team convention. I'm trying to follow it
+in new code I'm writing I'll leave most of the existing stuff as-is.
+
+---
+
+Now working on pushing data to the Transmitter. Testing this now involves having
+some fixture code in the RethinkDB. So, time to get some of that setup.
+
+At the same time, I'm now in the midst of my first test expecting a test double
+to be fully processed by the production code's channel before the test ends,
+and that sort of async testing is usually wonksville. For now, I'll probably
+fall back to directly testing the method called by the goroutine.
+
+---
+
+A decent compromise - bypassing the goroutine, but still using the channel. Got
+DB setup working, wanna refactor some of this, e.g. extracting out common seed
+and setup/fixture code whatnot.

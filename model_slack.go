@@ -9,7 +9,7 @@ type Slack struct {
 	Channel string `gorethink:"channel" json:"channel"`
 }
 
-func (s *Slack) Transmit() {
+func (s *Slack) Transmit(p AlertPackage) {
 
 }
 
