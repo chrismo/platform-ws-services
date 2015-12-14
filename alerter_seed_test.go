@@ -18,25 +18,14 @@ func seedAlerts(t *testing.T) {
 	}
 	alerter.pool.Get().Flush()
 	defer alerter.pool.Close()
-	result := &SensuResult{
-		Client: "localhost",
-		Check: SensuCheck{
-			Name:         "redis0-redis_role",
-			CapsuleName:  "redis0",
-			Output:       "expected role master, found role slave",
-			Status:       0,
-			CapsuleId:    "111111",
-			DeploymentId: "987654321",
-			AccountSlug:  "compose-test",
-		},
+	result := &Alert{
+		Name:         "redis0-redis_role",
+		CapsuleName:  "redis0",
+		Output:       "expected role master, found role slave",
+		Status:       0,
+		CapsuleID:    "111111",
+		DeploymentID: "987654321",
+		AccountSlug:  "compose-test",
 	}
-	value, err := result.Check.serialize()
-	if err != nil {
-		log.Fatalf("unable to serialize check, %s\n", err.Error())
-	}
-	key, field, err := result.Check.alertInfo()
-	if err != nil {
-		log.Fatalf("unable to get alertInfo, %s\n", err.Error())
-	}
-	alerter.SetHash(key, field, value)
+	alerter.processAlert(result)
 }

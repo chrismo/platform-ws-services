@@ -55,7 +55,7 @@ func (a *Alerter) listenForChecks() {
 	for {
 		select {
 		case result := <-a.AlertChan:
-			if err := a.processSensuResult(result); err != nil {
+			if err := a.processAlert(result); err != nil {
 				log.Printf("ERROR: Unable to process sensu result, %s", err.Error())
 			}
 		case <-time.After(100 * time.Millisecond):
@@ -64,7 +64,7 @@ func (a *Alerter) listenForChecks() {
 	}
 }
 
-func (a *Alerter) processSensuResult(alert *Alert) error {
+func (a *Alerter) processAlert(alert *Alert) error {
 	if alert.Status != Resolved {
 		value, _ := alert.Serialize()
 		key, field, err := alert.prepAlertForHash()
