@@ -40,7 +40,7 @@ func main() {
 	defer session.Close()
 	session.Use("alerts")
 
-	notifier := NewNotifier([]Transmitter{&Slack{}})
+	notifier := NewNotifier([]Transmitter{&Pagerduty{}, &Slack{}})
 	notifier.Start()
 
 	mux := http.NewServeMux()

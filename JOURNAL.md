@@ -220,3 +220,14 @@ fall back to directly testing the method called by the goroutine.
 A decent compromise - bypassing the goroutine, but still using the channel. Got
 DB setup working, wanna refactor some of this, e.g. extracting out common seed
 and setup/fixture code whatnot.
+
+and ... Done.
+
+---
+
+Hacking on the PagerDuty implementation. Not sure I have a handle on the best
+way to uniquely ID a given alert. Not sure about the CapsuleID.
+
+Ok ... have a working implementation, setup a free trial to verify via a unit
+test. I'm hardcoding the Service Key which needs to be in the settings, also
+want to flesh out the integration test to do this all the way through.
