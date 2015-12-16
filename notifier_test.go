@@ -7,10 +7,11 @@ type StuntTransmitter struct {
 	AlertPackage   AlertPackage
 }
 
-func (st *StuntTransmitter) Transmit(p AlertPackage) {
+func (st *StuntTransmitter) Transmit(p AlertPackage) *TransmitResult {
 	st.TransmitCalled = true
 	p.Alert.Name = p.Alert.Name + "-done"
 	st.AlertPackage = p
+	return nil
 }
 
 func TestNotifierSimple(t *testing.T) {

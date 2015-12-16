@@ -19,7 +19,20 @@ type AlertPackage struct {
 // Transmitter interface can be used to send an alert to any external service:
 // SMS, PagerDuty, Slack, etc.
 type Transmitter interface {
-	Transmit(p AlertPackage)
+	Transmit(p AlertPackage) *TransmitResult
+}
+
+type TransmitResultType int // dumb name
+
+const (
+	Success TransmitResultType = iota
+	Skipped
+	Error
+)
+
+type TransmitResult struct {
+	Result  TransmitResultType
+	Message string
 }
 
 // Notifier sends notifications for alerts based on deployment/group settings

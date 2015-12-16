@@ -9,8 +9,8 @@ type Slack struct {
 	Channel string `gorethink:"channel" json:"channel"`
 }
 
-func (s *Slack) Transmit(p AlertPackage) {
-
+func (s *Slack) Transmit(p AlertPackage) *TransmitResult {
+	return nil
 }
 
 // TODO: take the alert and make a nice Slack notification with some sort of

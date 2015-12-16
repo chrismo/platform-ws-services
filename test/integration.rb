@@ -6,6 +6,8 @@ class IntegrationTester
   end
 
   def execute
+    setup_deployment
+
     puts "Resolving existing alerts..."
     @alerter.resolve_all_alerts
     alerts = @alerter.get_alerts
@@ -17,6 +19,10 @@ class IntegrationTester
     raise "should have 1 alert" unless alerts.keys.length == 1
 
     puts "Tests PASSED"
+  end
+
+  def setup_deployment
+    # need to test both types of settings - deployment and group
   end
 end
 

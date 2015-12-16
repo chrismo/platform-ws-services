@@ -231,3 +231,20 @@ way to uniquely ID a given alert. Not sure about the CapsuleID.
 Ok ... have a working implementation, setup a free trial to verify via a unit
 test. I'm hardcoding the Service Key which needs to be in the settings, also
 want to flesh out the integration test to do this all the way through.
+
+### 2015 Dec 15
+
+I've decided to go with logging problems from the Transmitter, rather than
+returning anything to the Notifier. In real life, we'd need to consider the best
+way to error handle those things, Splunk notifications or whatever (yo dawg).
+Also, with PagerDuty seems it would be a good thing to have actual daily test
+notifications going to a sample alert, just to help make sure things haven't
+broken down without any notice.
+
+### 2015 Dec 16
+
+Actually, yesterday changed my mind to have Transmitter return a TransmitResult
+primarily for testing at this point. Production code ignores it, but it allows
+some better assertions. Got the tests cleaned up, also added code to skip
+PagerDuty if there's no setting configured. Need to do a proper integration test
+next.
