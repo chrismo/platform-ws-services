@@ -88,9 +88,7 @@ func (n *Notifier) processAlert(alert *Alert) error {
 
 func buildAlertPackage(alert *Alert) (*AlertPackage, error) {
 	latterPart := strings.TrimPrefix(alert.Name, alert.CapsuleName)
-	log.Print(latterPart)
 	checkName := strings.Replace(latterPart, "-", "", 1)
-	log.Print(checkName)
 	deployment, err := LookupDeploymentById(alert.DeploymentID)
 	if err != nil {
 		return nil, err

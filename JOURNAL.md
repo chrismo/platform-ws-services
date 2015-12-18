@@ -301,3 +301,9 @@ to make sure there was appropriate behavior.
 
 Alrighty - everything finalized in the integration test and alerts going all
 the way through my trial PagerDuty account.
+
+Oh, still have to test group settings at integration level.
+
+---
+
+Group settings test added and verified. W00t.

@@ -6,8 +6,19 @@ class IntegrationTester
   end
 
   def execute
-    puts 'Adding deployment...'
     @deployment = Deployment.new.tap { |d| d.verbose = @verbose }
+    @deployment.settings = notification_settings
+    puts 'Testing with deployment settings...'
+    test_deployment
+
+    @deployment.settings = {}
+    @deployment.group_settings = notification_settings
+    puts 'Testing with group settings...'
+    test_deployment
+  end
+
+  def test_deployment
+    puts 'Adding deployment...'
     setup_deployment
 
     puts 'Cleaning up/resolving existing alerts...'
@@ -31,6 +42,10 @@ class IntegrationTester
 
   def setup_deployment
     @deployment.add_deployment
+  end
+
+  def notification_settings
+    {'pagerduty_key' => '545bf39a778d45b1b4160a7fd782fae9'} # free, trial account
   end
 end
 
@@ -56,7 +71,7 @@ class Group < Curler
   end
 
   def add_group
-    post_group
+    raise_on_fail { post_group }
   end
 
   private
@@ -72,22 +87,24 @@ class Group < Curler
 end
 
 class Deployment < Curler
-  attr_accessor :id, :group_id, :settings, :check
+  attr_accessor :id, :group_id, :settings, :check, :group_settings
 
   def initialize
     @id = rand(100000).to_s
     @group_id = nil
     @type = 'foobar'
-    @settings = {'pagerduty_key' => '545bf39a778d45b1b4160a7fd782fae9'} # free, trial account
+    @settings = {}
+    @group_settings = {}
   end
 
   def add_deployment
-    raise_on_fail { Group.new(gid).tap { |g| g.verbose = @verbose }.add_group }
+    group = Group.new(gid).tap { |g| g.verbose = @verbose; g.settings = @group_settings }
+    group.add_group
+
     raise_on_fail { post_deployment }
-    raise_on_fail {
-      @check = Check.new
-      @check.tap { |c| c.type = @type; c.verbose = @verbose }.add_check
-    }
+
+    @check = Check.new.tap { |c| c.type = @type; c.verbose = @verbose }
+    @check.add_check
   end
 
   private
@@ -97,7 +114,6 @@ class Deployment < Curler
   end
 
   def post_deployment
-
     body = {
       'id' => @id,
       'group_id' => gid,
@@ -122,7 +138,7 @@ class Check < Curler
   end
 
   def add_check
-    post_check
+    raise_on_fail { post_check }
   end
 
   private
