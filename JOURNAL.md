@@ -248,3 +248,56 @@ primarily for testing at this point. Production code ignores it, but it allows
 some better assertions. Got the tests cleaned up, also added code to skip
 PagerDuty if there's no setting configured. Need to do a proper integration test
 next.
+
+### 2015 Dec 17
+
+The integration test has hit a snag in that it's presuming idempotency on
+Deployment, Group and Check - but Check is giving me a problem. The code appears
+to allow for replacement in the event of a conflict, but it's still not
+evaluating as returning an inserting or replaced 'row' (or whatever rethinkdb
+calls them).
+
+So, hopefully this detour won't be long. I could just bypass by always
+generating new values in my integration test, since this isn't directly
+pertinent, but in real life I'd need to chase this bug, so for the sake of the
+exercise I'll chase it a bit. At this early stage, it may not actually be a bug
+but something I'm doing wrong.
+
+---
+
+Well, two unit tests for both Check and Deployment, and neither are working
+properly. Have compared to sample code inside the rethinkdb lib source, and it
+seems fine. Dunno what's wrong.
+
+Dumping the resp to the console shows this:
+```
+2015/12/17 17:00:36 {0 1 0 0 0 0 0 0 0 0 0 0 0 0 []  [] []}
+2015/12/17 17:00:36 {0 0 0 1 0 0 0 0 0 0 0 0 0 0 []  [] []}
+```
+
+So maybe the code to confirm something happened is referencing the wrong
+counter.
+
+RunWrite returns a WriteResponse record which has these ints:
+
+```
+type WriteResponse struct {
+	Errors        int              `gorethink:"errors"`
+	Inserted      int              `gorethink:"inserted"`
+	Updated       int              `gorethink:"updated"`
+	Unchanged     int              `gorethink:"unchanged"`
+	Replaced      int              `gorethink:"replaced"`
+  ...
+```
+
+So, `Unchanged` is the indicator on a true idempotent save, presumably it's
+savvy enough to know nothing at all changed, which shouldn't be an error.
+
+I guess either a check on `Errors` -- may not be enough to catch an upsert
+problem, or also check `Unchanged` ... in real life I'd keep chasing this down
+to make sure there was appropriate behavior.
+
+---
+
+Alrighty - everything finalized in the integration test and alerts going all
+the way through my trial PagerDuty account.

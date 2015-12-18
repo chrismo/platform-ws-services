@@ -37,7 +37,7 @@ func (c *Check) Save() error {
 	if err != nil {
 		return err
 	}
-	if resp.Inserted == 0 && resp.Replaced == 0 {
+	if resp.Inserted+resp.Replaced+resp.Unchanged == 0 {
 		return errors.New("Unable to insert/replace Check")
 	}
 	return nil

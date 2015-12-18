@@ -2,77 +2,191 @@ require 'json'
 
 class IntegrationTester
   def initialize(verbose=false)
-    @alerter = Alerter.new.tap { |a| a.verbose = verbose }
+    @verbose = verbose
   end
 
   def execute
+    puts 'Adding deployment...'
+    @deployment = Deployment.new.tap { |d| d.verbose = @verbose }
     setup_deployment
 
-    puts "Resolving existing alerts..."
+    puts 'Cleaning up/resolving existing alerts...'
+    @alerter = Alerter.new(@deployment.id).tap { |a| a.verbose = @verbose }
     @alerter.resolve_all_alerts
     alerts = @alerter.get_alerts
-    raise "should have no alerts" unless alerts.empty?
+    raise 'should have no alerts' unless alerts.empty?
 
-    puts "Adding new alert..."
-    @alerter.add_alert
+    puts 'Adding new alert...'
+    @alerter.add_alert_for_check_name(@deployment.check.name)
     alerts = @alerter.get_alerts
-    raise "should have 1 alert" unless alerts.keys.length == 1
+    raise 'should have 1 alert' unless alerts.keys.length == 1
 
-    puts "Tests PASSED"
+    puts 'Resolving new alert...'
+    @alerter.resolve_all_alerts
+    alerts = @alerter.get_alerts
+    raise 'should have no alerts' unless alerts.empty?
+
+    puts 'Tests PASSED'
   end
 
   def setup_deployment
-    # need to test both types of settings - deployment and group
+    @deployment.add_deployment
   end
 end
 
-class Alerter
+class Curler
   attr_accessor :verbose
+
+  def curl_it(*args)
+    Curl.new(*args).tap { |c| c.verbose = @verbose }.execute
+  end
+
+  def raise_on_fail
+    result = yield
+    raise "Failed call: #{result}" unless result.keys.join == 'ok'
+  end
+end
+
+class Group < Curler
+  attr_accessor :group_id, :settings
+
+  def initialize(group_id)
+    @group_id = group_id
+    @settings = {}
+  end
+
+  def add_group
+    post_group
+  end
+
+  private
+
+  def post_group
+    body = {
+      'id' => @group_id,
+      'settings' => @settings
+    }.to_json
+
+    curl_it('POST', 'groups', body)
+  end
+end
+
+class Deployment < Curler
+  attr_accessor :id, :group_id, :settings, :check
+
+  def initialize
+    @id = rand(100000).to_s
+    @group_id = nil
+    @type = 'foobar'
+    @settings = {'pagerduty_key' => '545bf39a778d45b1b4160a7fd782fae9'} # free, trial account
+  end
+
+  def add_deployment
+    raise_on_fail { Group.new(gid).tap { |g| g.verbose = @verbose }.add_group }
+    raise_on_fail { post_deployment }
+    raise_on_fail {
+      @check = Check.new
+      @check.tap { |c| c.type = @type; c.verbose = @verbose }.add_check
+    }
+  end
+
+  private
+
+  def gid
+    @group_id || "g#{@id}"
+  end
+
+  def post_deployment
+
+    body = {
+      'id' => @id,
+      'group_id' => gid,
+      'type' => @type,
+      'name' => 'foobar-is-awesome',
+      'settings' => @settings
+    }.to_json
+
+    curl_it('POST', 'deployments', body)
+  end
+end
+
+class Check < Curler
+  attr_accessor :name, :type, :level, :title, :description
+
+  def initialize
+    @name = 'foobar_check'
+    @type = 'foobar'
+    @level = 1
+    @title = 'Check the foobar'
+    @description = 'Owning a foobar requires checking it.'
+  end
+
+  def add_check
+    post_check
+  end
+
+  private
+
+  def post_check
+    body = {
+      'name' => @name,
+      'type' => @type,
+      'level' => @level,
+      'title' => @title,
+      'description' => @description
+    }.to_json
+
+    curl_it('POST', 'checks', body)
+  end
+end
+
+class Alerter < Curler
+  attr_accessor :deployment_id
 
   def initialize(deployment_id='987654321')
     @deployment_id = deployment_id
+    @type = 'redis_role'
+    @capsule_name = 'redis0'
   end
 
   def get_alerts
     curl_it('GET', "deployments/#{@deployment_id}")
   end
 
-  def add_alert
-    post_alert(1, "132435465768798#{rand(5)}")
+  def add_alert_for_check_name(type)
+    @type = type
+    @status = 1
+    @capsule_id = "132435465768798#{rand(5)}"
+    post_alert
   end
 
   def resolve_all_alerts
     alerts = get_alerts
     alerts.each_pair do |capsule_id, alert|
-      post_alert(0, capsule_id)
+      @status = 0
+      @capsule_id = capsule_id
+      post_alert
     end
   end
 
   private
 
-  def post_alert(status, capsule_id)
-    body = <<-TEXT
-    {
-      "client": "localhost",
-      "check": {
-        "name": "redis0-redis_role",
-        "capsule_name": "redis0",
-        "output": "no master found",
-        "status": #{status},
-        "capsule_id": "#{capsule_id}",
-        "deployment_id": "#{@deployment_id}",
-        "account": "compose"
+  def post_alert
+    body = {
+      'client' => 'localhost',
+      'check' => {
+        'name' => "#{@capsule_name}-#{@type}",
+        'capsule_name' => @capsule_name,
+        'output' => 'no master found',
+        'status' => @status,
+        'capsule_id' => @capsule_id,
+        'deployment_id' => @deployment_id,
+        'account' => 'compose'
       }
-    }
-    TEXT
+    }.to_json
 
     curl_it('POST', 'alerts', body)
   end
-
-  def curl_it(*args)
-    Curl.new(*args).tap { |c| c.verbose = @verbose }.execute
-  end
-
 end
 
 # Why shell out to curl instead of net/http or a curl gem or any number of other
