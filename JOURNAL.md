@@ -335,3 +335,18 @@ Which is odd because the code to make the AlertPackage is outside of the
 specific Transmitter implementation. So why it'd work for one and not the
 other, I'm not sure. Maybe Slack throttles their endpoint? Dunno, but I'm
 committing this and done for tonight.
+
+
+### 2016 Jan 9
+
+Ah, classic hubris. "Maybe Slack throttles their endpoint," or maybe I didn't
+test properly with a separate deployment instance when switching out group
+settings and deployment settings. Yet again, a good night's sleep is sometimes
+the best design tool.
+
+It's possible there's also a bug somewhere here in either my integration
+script (more likely) or the service when updating a deployment. In real life,
+I'd chase this down, but for now going to move on - bunch of TODOs in the code
+I want to look at.
+
+---

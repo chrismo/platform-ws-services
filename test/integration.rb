@@ -11,7 +11,7 @@ class IntegrationTester
     puts 'Testing with deployment settings...'
     test_deployment
 
-    @deployment.settings = {}
+    @deployment = Deployment.new.tap { |d| d.verbose = @verbose }
     @deployment.group_settings = notification_settings
     puts 'Testing with group settings...'
     test_deployment
