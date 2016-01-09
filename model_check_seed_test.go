@@ -71,8 +71,7 @@ func seedRethinkdbGroups(s *r.Session) error {
 			Settings: Settings{
 				PagerdutyKey: "123456",
 				Slack: Slack{
-					ApiKey:  "slack_api_key",
-					Channel: "#general",
+					WebHookURL: "web_hook_url",
 				},
 			},
 		},

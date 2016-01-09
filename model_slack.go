@@ -9,13 +9,9 @@ import (
 	"net/http"
 )
 
-const (
-	slackURL = "https://slack.com/api/chat.postMessage"
-)
-
+// Slack contains setting for Slack connectivity
 type Slack struct {
-	ApiKey  string `gorethink:"api_key" json:"api_key"`
-	Channel string `gorethink:"channel" json:"channel"`
+	WebHookURL string `gorethink:"web_hook_url" json:"web_hook_url"`
 }
 
 // SlackPostMessage implements the params for the postMessage API
@@ -32,7 +28,7 @@ func (s *Slack) Transmit(ap AlertPackage) *TransmitResult {
 	var msg string
 	var alertType string
 
-	if len(ap.Settings.Slack.ApiKey) == 0 {
+	if len(ap.Settings.Slack.WebHookURL) == 0 {
 		return &TransmitResult{Result: Skipped, Message: "Deployment/Group has no Slack Setting configured."}
 	}
 
@@ -46,10 +42,7 @@ func (s *Slack) Transmit(ap AlertPackage) *TransmitResult {
 	text := fmt.Sprintf("Alert for %s, Capsule ID %s - %s", ap.Check.Description, ap.CapsuleID, alertType)
 
 	e := &SlackPostMessage{
-		Token:   ap.Settings.Slack.ApiKey,
-		Channel: ap.Settings.Slack.Channel,
-		Text:    text,
-		AsUser:  true,
+		Text: text,
 	}
 
 	payload, err := json.Marshal(e)
@@ -60,7 +53,7 @@ func (s *Slack) Transmit(ap AlertPackage) *TransmitResult {
 		return &TransmitResult{Result: Error, Message: msg}
 	}
 
-	resp, err := http.Post(slackURL, "application/json", bytes.NewReader(payload))
+	resp, err := http.Post(ap.Settings.Slack.WebHookURL, "application/json", bytes.NewReader(payload))
 	if err != nil {
 		// TODO: Need to ID the alert
 		msg = "ERROR: Unable to transmit alert to Slack"
@@ -86,7 +79,3 @@ func (s *Slack) Transmit(ap AlertPackage) *TransmitResult {
 	}
 	return &TransmitResult{Result: Success, Message: fmt.Sprintf("%s alert posted to Slack.", alertType)}
 }
-
-//func (s *Slack) SendToSlack(deploymentName, message string, status float64) {
-
-//

@@ -319,3 +319,19 @@ on how to authenticate properly, and couldn't get the code and test to work,
 dug some more and confirmed I'd need to authenticate first.
 
 So I'm back - but want to commit what I have first.
+
+---
+
+There. So ... I guess reading before, late at night, I couldn't decipher
+between incoming web-hooks and the API for posting a message. The code here
+had the API url already, but turns out an incoming web-hook works just fine,
+no auth required, looks like a tokenized custom url. I'll adjust accordingly.
+
+---
+
+Ok, all tests passing ... ish. Added in integration tests, and it seems Slack
+is only getting the deployment settings message, not the group settings one.
+Which is odd because the code to make the AlertPackage is outside of the
+specific Transmitter implementation. So why it'd work for one and not the
+other, I'm not sure. Maybe Slack throttles their endpoint? Dunno, but I'm
+committing this and done for tonight.

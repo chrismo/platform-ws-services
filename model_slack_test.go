@@ -1,15 +1,19 @@
 package main
 
-import "testing"
+import (
+	"io/ioutil"
+	"log"
+	"testing"
+)
 
-// TODO: log calls clutter test output
+// TODO: re-use setup code
 
 const (
-	//	SlackTestAPIKey = "xoxb-16976869585-tXlGTDPPUJll00rZ0XZ3hSTf"
-	SlackTestAPIKey = "xoxp-16973770979-16973770995-16977328082-d9933fe3d4"
+	WebHookTestURL = "https://hooks.slack.com/services/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"
 )
 
 func TestSlackIntegrationTrigger(t *testing.T) {
+	log.SetOutput(ioutil.Discard)
 	s := Slack{}
 	ap := AlertPackage{
 		Alert: Alert{
@@ -21,8 +25,7 @@ func TestSlackIntegrationTrigger(t *testing.T) {
 		},
 		Settings: Settings{
 			Slack: Slack{
-				ApiKey:  SlackTestAPIKey,
-				Channel: "#general",
+				WebHookURL: WebHookTestURL,
 			},
 		},
 	}
@@ -32,6 +35,7 @@ func TestSlackIntegrationTrigger(t *testing.T) {
 }
 
 func TestSlackIntegrationResolve(t *testing.T) {
+	log.SetOutput(ioutil.Discard)
 	s := Slack{}
 	ap := AlertPackage{
 		Alert: Alert{
@@ -43,8 +47,7 @@ func TestSlackIntegrationResolve(t *testing.T) {
 		},
 		Settings: Settings{
 			Slack: Slack{
-				ApiKey:  SlackTestAPIKey,
-				Channel: "#general",
+				WebHookURL: WebHookTestURL,
 			},
 		},
 	}
@@ -70,6 +73,7 @@ func TestSlackIntegrationNoSetting(t *testing.T) {
 }
 
 func TestSlackIntegrationBadSetting(t *testing.T) {
+	log.SetOutput(ioutil.Discard)
 	s := Slack{}
 	ap := AlertPackage{
 		Alert: Alert{
@@ -81,8 +85,7 @@ func TestSlackIntegrationBadSetting(t *testing.T) {
 		},
 		Settings: Settings{
 			Slack: Slack{
-				ApiKey:  "not-really-a-key",
-				Channel: "#general",
+				WebHookURL: WebHookTestURL,
 			},
 		},
 	}

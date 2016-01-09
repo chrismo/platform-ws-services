@@ -45,7 +45,12 @@ class IntegrationTester
   end
 
   def notification_settings
-    {'pagerduty_key' => '545bf39a778d45b1b4160a7fd782fae9'} # free, trial account
+    {
+      'pagerduty_key' => '545bf39a778d45b1b4160a7fd782fae9', # free, trial account
+      'slack' => {
+        'web_hook_url' => 'https://hooks.slack.com/services/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' # moworld slack
+      }
+    }
   end
 end
 
@@ -103,7 +108,11 @@ class Deployment < Curler
 
     raise_on_fail { post_deployment }
 
-    @check = Check.new.tap { |c| c.type = @type; c.verbose = @verbose }
+    @check = Check.new.tap { |c|
+      c.type = @type
+      c.verbose = @verbose
+      c.description += " #{@group_settings.length > 0 ? '(group settings)' : '(deployment settings)'}"
+    }
     @check.add_check
   end
 
@@ -134,7 +143,7 @@ class Check < Curler
     @type = 'foobar'
     @level = 1
     @title = 'Check the foobar'
-    @description = 'Owning a foobar requires checking it.'
+    @description = 'Owning a foobar requires checking it'
   end
 
   def add_check
