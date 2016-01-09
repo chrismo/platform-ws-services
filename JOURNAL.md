@@ -350,3 +350,25 @@ I'd chase this down, but for now going to move on - bunch of TODOs in the code
 I want to look at.
 
 ---
+
+Going to tackle the CurrentChecks "this is all kinds of gross" TODO. Adding
+tests to cover a refactoring.
+
+First thing is a deployment with no checks raises a db error, instead of just
+an empty checks array. I'd think proper error handling here would be preventing
+a deployment being added with no checks. CurrentChecks shouldn't necessarily
+error out. Keeping that part as-is for now, need more tests first.
+
+So ... I add a check in the next test, same error instance, I dump it out, and
+now see we got other problemos: gorethink: Index `type` was not found on table
+`alerts_test.checks`. Ahhh, when linking the seed scripts to the test setup,
+the index was missed because it's only added in the seed method that adds the
+seed data - that needs shoring up.
+
+---
+
+Well, that was annoying. Dunno what of my setup code is leftover from the
+original exercise code and what's my screwup, but the code to create the index
+wasn't being applied to the proper database -- plus there was no 'type' index
+anyway. So, now that that's put to bed, and I understand things a bit better,
+onward with the refactoring.

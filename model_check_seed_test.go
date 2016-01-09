@@ -58,9 +58,6 @@ func seedRethinkdbChecks(s *r.Session) error {
 	for _, check := range data {
 		r.Table("checks").Insert(check).RunWrite(s)
 	}
-	r.Table("checks").IndexCreateFunc("type_name", func(row r.Term) interface{} {
-		return []interface{}{row.Field("type"), row.Field("name")}
-	}).RunWrite(s)
 	return nil
 }
 
