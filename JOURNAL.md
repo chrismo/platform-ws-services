@@ -9,7 +9,7 @@ I'd go an extra step and journal my brain through this process. Also, I'm not
 likely to spend a lot of uninterrupted time on it given the holidays
 approaching.
 
-### Dec 10 2015
+### 2015 Dec 10
 
 Grabbed the exercise last night, was quickly reminded that Go was one of the
 pieces of tech in play, and decided, sure, let's learn some Go. How bad could
@@ -94,7 +94,7 @@ store these at all in Redis, esp. with 5 min expiry?)
 Also I suspect I jumped the gun on presuming deployments were instances instead
 of types as the README said before.
 
-### Dec 11 2015
+### 2015 Dec 11
 
 Fresh start. Read over a bit of Go docs and went through the Tour examples to
 help me understand some more basics, cuz reading is much easier than writing.
@@ -129,7 +129,7 @@ eventually moved the current Listener behind an IListener interface (nod to
 Delphi) and created a passing unit test for handle_alerts.go. Whew. Such curve.
 So learning.
 
-### Dec 12 2015
+### 2015 Dec 12
 
 Little bit yesterday and today picked away at times on some integration tests
 with Ruby. I need/want some backup on further refactoring work from the outside,
@@ -143,7 +143,7 @@ commands to the console to more generically demonstrate how to use the API. The
 script in its current form isn't fully exploratory, but covers some integration
 basics while doing some refactoring.
 
-### Dec 13 2015
+### 2015 Dec 13
 
 The current Listener is mostly code around the SensuCheck, and should probably
 become a model. The alerts handler should be able to get a SensuCheck instance
@@ -307,3 +307,15 @@ Oh, still have to test group settings at integration level.
 ---
 
 Group settings test added and verified. W00t.
+
+
+### 2016 Jan 8
+
+Long time no hack. Holidays hit with lots to do, now the end of the first week
+back at it and haven't had my head in this game. Plus, OAuth is bleh. At least
+I think that's where I left off on Slack. Either on the 17th or 18th of Dec,
+I didn't journal anything then. IIRC, I couldn't get solid info in their docs
+on how to authenticate properly, and couldn't get the code and test to work,
+dug some more and confirmed I'd need to authenticate first.
+
+So I'm back - but want to commit what I have first.
