@@ -97,6 +97,20 @@ func (d *Deployment) CurrentChecks() ([]Check, error) {
 	return checks, nil
 }
 
+func (d *Deployment) DefaultChecks() ([]Check, error) {
+	checksCursor, err := r.Table("checks").GetAllByIndex("type", d.Type).Run(session)
+	if err != nil {
+		return nil, err
+	}
+	defer checksCursor.Close()
+	var checks []Check
+	checksCursor.All(&checks)
+	if checksCursor.Err() != nil {
+		return nil, checksCursor.Err()
+	}
+	return checks, nil
+}
+
 func (d *Deployment) CheckByName(name string) (check Check, err error) {
 	cur, err := r.Branch(
 		r.Table("deployments").Get(d.Id).Field("checks").Filter(map[string]interface{}{"name": name}).IsEmpty(),

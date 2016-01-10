@@ -372,3 +372,40 @@ original exercise code and what's my screwup, but the code to create the index
 wasn't being applied to the proper database -- plus there was no 'type' index
 anyway. So, now that that's put to bed, and I understand things a bit better,
 onward with the refactoring.
+
+---
+
+So, the logic in CurrentChecks that goes out of its way to merge Checks read in
+from the database with any already loaded in memory seems superfluous.
+Replacing it with a mere dump of what's from the database works against my
+current tests, but given no pre-existing tests, I should experiment a bit here
+in case I can think of a decent reason to do this. I'm guessing no.
+
+So ... if Checks are in the Deployment Checks array, then those are separate
+instances saved WITH the Deployment than Checks that are saved as standalone?
+
+... Yes. Ok. Brain adjusted. RethinkDB Data Explorer is a thing I learned. Now
+I understand why it's trying to merge these. I DON'T understand if this
+separate storage is bad design or necessary.
+
+---
+
+Ok. README declaring the standalone Check model as a ''"dictionary" of all
+checks' ... that makes sense as separate from any that are then attached and
+separately stored with the Deployment. The README goes on to say "returned by
+each deployment" which confuses me. I'd prefer more details on how the default
+checks exist in combination with optional deployment-specific checks.
+
+Funny how my mental model hadn't picked up on this yet. I've been presuming
+the related []Check in Deployment was a reference to the Check table, not its
+own storage. The code only started making sense once I realized that, then
+realized a browser (enter rethink Data Explorer) would make it crystal clear.
+
+So, I've added a method to Deployment called "DefaultChecks", plus a long test
+detailing how the standalone ('default') Checks work in conjunction with the
+deployment-specific checks.
+
+Going to commit this, then I need to go BACK to the "this is gross" TODO and
+see if there's some better idiomatic Go the TODO author was referring to,
+now that I understand the merging functionality is intentional. That or the
+"this is gross" author didn't understand the necessary complexity.

@@ -45,3 +45,40 @@ func TestCurrentChecksWithManyChecks(t *testing.T) {
 	equals(t, nil, err)
 	equals(t, 2, len(checks))
 }
+
+func TestCurrentChecksMerge(t *testing.T) {
+	setupTestDB()
+	defer tearDownTestDB()
+	checkA := Check{Type: "urSql", Name: "storage", Title: "deployment-specific"}
+	d := Deployment{Id: "456", GroupId: "g456", Type: "urSql", Name: "bob's database",
+		Checks: []Check{checkA},
+	}
+	equals(t, nil, d.Save())
+
+	checkA.Title = "default"
+	equals(t, nil, checkA.Save())
+
+	checkB := Check{Type: "urSql", Name: "cpu", Title: "default"}
+	equals(t, nil, checkB.Save())
+
+	d, _ = LookupDeploymentById(d.Id)
+	equals(t, "urSql", d.Type)
+	equals(t, 1, len(d.Checks))
+	equals(t, "deployment-specific", d.Checks[0].Title)
+
+	checks, err := d.DefaultChecks()
+	equals(t, nil, err)
+	equals(t, 2, len(checks))
+	equals(t, "default", checks[0].Title)
+	equals(t, "default", checks[1].Title)
+
+	checks, err = d.CurrentChecks()
+	equals(t, nil, err)
+	equals(t, 2, len(checks))
+
+	storageCheck, _ := d.CheckByName("storage")
+	equals(t, "deployment-specific", storageCheck.Title)
+
+	cpuCheck, _ := d.CheckByName("cpu")
+	equals(t, "default", cpuCheck.Title)
+}
