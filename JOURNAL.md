@@ -409,3 +409,13 @@ Going to commit this, then I need to go BACK to the "this is gross" TODO and
 see if there's some better idiomatic Go the TODO author was referring to,
 now that I understand the merging functionality is intentional. That or the
 "this is gross" author didn't understand the necessary complexity.
+
+
+## 2016 Jan 10
+
+Poked around the internets and found a way to dedup a slice. Since I already
+implemented DefaultChecks separately for my own understanding, that allowed
+the CurrentChecks method to re-use it and focus on the dedup routine I found.
+I'm not sure if it's better - it's more dense, though I had to focus on either
+one to understand them, so I'll go with this change, and call "this is gross"
+no more.

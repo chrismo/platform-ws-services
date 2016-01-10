@@ -68,33 +68,26 @@ func LookupDeploymentById(deploymentId string) (deployment Deployment, err error
 	return deployment, nil
 }
 
-// TODO: this is all kinds of gross
 func (d *Deployment) CurrentChecks() ([]Check, error) {
-	checks := make([]Check, 0)
-	checksCursor, err := r.Table("checks").GetAllByIndex("type", d.Type).Run(session)
+	allChecks := []Check{}
+	allChecks = append(allChecks, d.Checks...)
+	defaultChecks, err := d.DefaultChecks()
 	if err != nil {
 		return nil, err
 	}
-	defer checksCursor.Close()
-	var defaultChecks []Check
-	checksCursor.All(&defaultChecks)
-	for _, dc := range defaultChecks {
-		checkFound := false
-		for _, c := range d.Checks {
-			if c.Name == dc.Name {
-				checks = append(checks, c)
-				checkFound = true
-				break
-			}
-		}
-		if !checkFound {
-			checks = append(checks, dc)
+	allChecks = append(allChecks, defaultChecks...)
+
+	// http://play.golang.org/p/q3bZ3hpOzD
+	m := map[string]bool{}
+	for _, c := range allChecks {
+		if _, seen := m[c.Name]; !seen {
+			allChecks[len(m)] = c
+			m[c.Name] = true
 		}
 	}
-	if checksCursor.Err() != nil {
-		return nil, checksCursor.Err()
-	}
-	return checks, nil
+	allChecks = allChecks[:len(m)]
+
+	return allChecks, nil
 }
 
 func (d *Deployment) DefaultChecks() ([]Check, error) {

@@ -75,6 +75,8 @@ func TestCurrentChecksMerge(t *testing.T) {
 	checks, err = d.CurrentChecks()
 	equals(t, nil, err)
 	equals(t, 2, len(checks))
+	equals(t, "deployment-specific", checks[0].Title)
+	equals(t, "default", checks[1].Title)
 
 	storageCheck, _ := d.CheckByName("storage")
 	equals(t, "deployment-specific", storageCheck.Title)
