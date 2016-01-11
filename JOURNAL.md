@@ -419,3 +419,32 @@ the CurrentChecks method to re-use it and focus on the dedup routine I found.
 I'm not sure if it's better - it's more dense, though I had to focus on either
 one to understand them, so I'll go with this change, and call "this is gross"
 no more.
+
+---
+
+Bah, the test suite is terribly slow. Sheesh 40s. Too much db recreation I'd
+wager. I've seen how to do my own TestMain, but that seems a little bit of a
+pain, and maybe there's something faster in general. Like just clearing the
+tables and such.
+
+Looking over all the TODOs, I'm going to leave "TODO: each of these as
+goroutine so one bad one can't block the rest?" -- Don't feel to strongly
+about the need to do that, given other work elsewhere with channels and such so
+far.
+
+Both the Slack and PagerDuty integration tests have the same comments around
+properly identifying an alert and such. Not sure if I'll come up with a good
+answer on my own and/or not too concerned about doing that before wrapping this
+up.
+
+I guess I'll poke around on the test slowness for a bit. See if there's a good
+Go profiler.
+
+---
+
+Added a benchmark test that just runs the setup and teardown. 'Twas way slow.
+Changing to just truncating the tables made it much faster, and made everything
+in db setup idempotent. Times like these I'm not liking Go, too much hassle
+compared to doing something like this in Ruby. Now the whole suite runs in
+a few seconds, instead of a few dozen seconds, and still works first time out
+if alerts_test doesn't exist.

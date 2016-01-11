@@ -2,8 +2,6 @@ package main
 
 import "testing"
 
-// TODO: log calls clutter test output
-
 func TestPagerdutyIntegrationTrigger(t *testing.T) {
 	pd := Pagerduty{}
 	ap := AlertPackage{

@@ -5,6 +5,7 @@
 - [x] (nah) - move existing notifier.getInfo into Deployment, it's feature envy
 - [x] Add specific PagerDuty notifier.
 - [x] Add specific Slack notifier.
+- [x] Make whole suite faster.
 - [ ] Existing TODOs in code
 - [ ] Why is status a float64?
 - [ ] Why are alerts set to expire in 30 minutes? Why stored in redis at all?

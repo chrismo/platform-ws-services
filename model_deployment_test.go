@@ -2,6 +2,13 @@ package main
 
 import "testing"
 
+func BenchmarkDBSetupTeardown(b *testing.B) {
+	for i := 0; i < b.N; i++ {
+		setupTestDB()
+		tearDownTestDB()
+	}
+}
+
 func TestIdempotentDeployment(t *testing.T) {
 	setupTestDB()
 	defer tearDownTestDB()
