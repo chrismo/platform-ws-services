@@ -6,8 +6,8 @@
 - [x] Add specific PagerDuty notifier.
 - [x] Add specific Slack notifier.
 - [x] Make whole suite faster.
+- [x] Why is status a float64?
 - [ ] Existing TODOs in code
-- [ ] Why is status a float64?
 - [ ] Why are alerts set to expire in 30 minutes? Why stored in redis at all?
 - [ ] Why are some routes declared twice (with/without ending slash)?
       except on alerts and groups? Convenience presumably? (main.go)

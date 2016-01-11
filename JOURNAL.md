@@ -448,3 +448,14 @@ in db setup idempotent. Times like these I'm not liking Go, too much hassle
 compared to doing something like this in Ruby. Now the whole suite runs in
 a few seconds, instead of a few dozen seconds, and still works first time out
 if alerts_test doesn't exist.
+
+---
+
+The answer to the question I added to TODO.md a long time ago "Why is status a
+float64?" is now: it's not anymore.
+
+I suppose in real life maybe there's some system somewhere that required this
+and so we have to accommodate it, so in real life I'd ask around before doing
+this, but in this exercise, seems like a no-brainer.
+
+---

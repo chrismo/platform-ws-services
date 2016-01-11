@@ -19,13 +19,13 @@ type ClientAlert struct {
 
 // Alert is an instance of a failed check of a deployment type.
 type Alert struct {
-	Name         string  `json:"name"`
-	CapsuleName  string  `json:"capsule_name"`
-	Output       string  `json:"output"`
-	Status       float64 `json:"status"`
-	CapsuleID    string  `json:"capsule_id,omitempty"`
-	DeploymentID string  `json:"deployment_id,omitempty"`
-	AccountSlug  string  `json:"account,omitempty"`
+	Name         string `json:"name"`
+	CapsuleName  string `json:"capsule_name"`
+	Output       string `json:"output"`
+	Status       int    `json:"status"`
+	CapsuleID    string `json:"capsule_id,omitempty"`
+	DeploymentID string `json:"deployment_id,omitempty"`
+	AccountSlug  string `json:"account,omitempty"`
 }
 
 // NewAlertFromJSON generates a new alert from a json string

@@ -14,7 +14,7 @@ func TestAlertModelJsonRoundtrip(t *testing.T) {
 				Name:         "name",
 				CapsuleName:  "capsuleName",
 				Output:       "output",
-				Status:       0.33333333333333, // float64?
+				Status:       1,
 				CapsuleID:    "capID",
 				DeploymentID: "depID",
 				AccountSlug:  "acc",
@@ -34,7 +34,7 @@ func TestAlertModelJsonRoundtrip(t *testing.T) {
 		t.Error("output did not roundtrip")
 	}
 
-	if alert.Status != 0.33333333333333 {
+	if alert.Status != 1 {
 		t.Error("status did not roundtrip")
 	}
 
