@@ -458,4 +458,21 @@ I suppose in real life maybe there's some system somewhere that required this
 and so we have to accommodate it, so in real life I'd ask around before doing
 this, but in this exercise, seems like a no-brainer.
 
----
+
+### 2016 Jan 11
+
+So, I'm going to pull the trigger on submitting what I have so far. My upcoming
+schedule isn't looking too awesome to keep digging around that much, and I'd
+love to get some feedback at this point.
+
+Lots of TODOs still remaining (in code and in my TODO.md), I think they're
+mostly mine at this point, and feel like diminishing returns for the sake of the
+exercise, though they'd need addressing in real life.
+
+The TODO in TODO.md I have on the Redis alerts I'm guessing has answers in how
+this pairs up with the Rails part of this exercise. One presumption is the
+system as a whole may not need to retain any one alert for more than 30 minutes
+because perhaps new alerts would come in as checks were continuously done.
+
+I think this is a great exercise, lots of real world issues here, and I enjoyed
+having an excuse to do some Go learning.
